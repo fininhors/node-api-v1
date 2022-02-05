@@ -1,0 +1,27 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon ./src/app.js"
+  },
+  "keywords": [],
+  "author": "Francisco Junior",
+  "license": "MIT",
+  "dependencies": {
+    "@prisma/client": "^3.9.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.2",
+    "express-async-errors": "^3.1.1",
+    "express-joi-validation": "^5.0.1",
+    "express-validation": "^3.0.8",
+    "joi": "^17.6.0",
+    "joi-translation-pt-br": "^0.0.6"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15",
+    "prisma": "^3.9.1"
+  }
+}
