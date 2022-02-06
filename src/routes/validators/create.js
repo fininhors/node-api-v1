@@ -1,10 +1,10 @@
-const Joi = require("joi");
+const Joi = require('joi');
 
 module.exports = {
-    body: {
-        name: Joi.string().required(),
-        email: Joi.string().email().required(),
-        ra: Joi.number().required(),
-        cpf: Joi.number().required(),
-    },
+  body: Joi.object({
+    name: Joi.string().required(),
+    email: Joi.string().email().required(),
+    ra: Joi.number().required(),
+    cpf: Joi.number().required(),
+  }),
 };

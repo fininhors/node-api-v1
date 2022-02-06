@@ -1,9 +1,7 @@
-const Joi = require("joi");
-
-const schema = Joi.object({
-    id: Joi.number().integer().required(),
-});
+const Joi = require('joi');
 
 module.exports = {
-    schema,
+  params: Joi.object({
+    id: Joi.number().required(),
+  }),
 };
