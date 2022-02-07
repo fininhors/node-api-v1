@@ -1,40 +1,53 @@
 const express = require("express");
 const { validate, ValidationError } = require("express-validation");
+const messages = require("joi-translation-pt-br");
 
+const verifyToken = require("../middlewares/auth");
+const AuthController = require("../controllers/AuthController");
 const StudentController = require("../controllers/StudentController");
 const validators = require("../validators");
 
-router.get(
-    "/students/:id",
-    validate(validators.getOrDelete),
-    StudentController.show
-);
+const makeValidation = (validation) =>
+    validate(validation, {}, { abortEarly: false, messages: messages });
 
-router.post("/students", validate(validators.create), StudentController.create);
-router.get("/students", StudentController.index);
+const router = express.Router();
+
+router.post("/register", AuthController.create);
+router.post("/login", AuthController.signin);
+
+router.post(
+    "/students",
+    verifyToken,
+    makeValidation(validators.create),
+    StudentController.create
+);
+router.get("/students", verifyToken, StudentController.index);
 router.get(
     "/students/:id",
-    validate(validators.getOrDelete),
+    verifyToken,
+    makeValidation(validators.getOrDelete),
     StudentController.show
 );
 router.put(
     "/students/:id",
-    validate(validators.update),
+    verifyToken,
+    makeValidation(validators.update),
     StudentController.update
 );
 router.delete(
     "/students/:id",
-    validate(validators.getOrDelete),
+    verifyToken,
+    makeValidation(validators.getOrDelete),
     StudentController.delete
 );
 
-router.use((err, req, res) => {
+router.use((err, req, res, next) => {
     if (err instanceof ValidationError) {
         return res.status(err.statusCode).json(err);
     }
 
     return res.status(500).json({
-        type: err.type, // will be "query" here, but could be "headers", "body", or "params"
+        type: err.type,
         message: err.error.toString(),
     });
 });
