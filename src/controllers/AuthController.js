@@ -3,18 +3,24 @@ const jwt = require("jsonwebtoken");
 const UserRepository = require("../repositories/UserRepository");
 
 module.exports = {
-    create: async (req, res) => {
+    register: async (req, res) => {
         const { name, email, password } = req.body;
-        let params = {
-            name,
-            email,
-            password: await bcrypt.hash(password, 10),
-        };
-        const user = await UserRepository.create(params);
+        const user = await UserRepository.getByEmail(email);
 
-        return res
-            .status(201)
-            .json({ message: "Usuário cadastrado com sucesso!" });
+        if (!user) {
+            let params = {
+                name,
+                email,
+                password: await bcrypt.hash(password, 10),
+            };
+            const user = await UserRepository.create(params);
+
+            return res
+                .status(201)
+                .json({ message: "Usuário cadastrado com sucesso!" });
+        }
+
+        return res.status(400).json({ message: "Usuário já cadastrado!" });
     },
     signin: async (req, res) => {
         const { email, password } = req.body;
@@ -39,11 +45,8 @@ module.exports = {
         });
 
         return res.json({
-            user: {
-                id: user.id,
-                name: user.name,
-                email: user.email,
-            },
+            name: user.name,
+            email: user.email,
             accessToken: token,
         });
     },
